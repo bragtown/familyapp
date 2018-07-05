@@ -1,12 +1,39 @@
+
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <BragNav
+      :brand = "'Family'" 
+      :isLoggedIn="isLoggedIn"  
+      :setIsLoggedIn="setIsLoggedIn"
+      :leftNavItems = "$router.options.routes"
+      :currentRoute = "$route">
+    </BragNav>
     <router-view/>
   </div>
 </template>
+<script>
+import BragNav from 'bragnav';
+import {mapMutations, mapGetters} from 'vuex';
+export default {
+  components: {
+    BragNav
+  },
+  methods:{
+    ...mapMutations([
+      'setIsLoggedIn'
+    ])
+  },
+  computed:{
+    ...mapGetters([
+      'isLoggedIn'
+    ])
+  },
+  beforeMount(){
+    console.log(this.$router, this.$route);
+  }
+  
+}
+</script>
 
 <style>
 #app {
