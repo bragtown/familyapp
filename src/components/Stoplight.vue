@@ -3,7 +3,8 @@
         <div class = "light"
             v-for = "(light, index) in lights"
             v-bind:key="index"
-            :style = "'background-color:'+(child.light === light ? light : 'black')">
+            :style = "'background-color:'+(child.light === light ? light : 'black')"
+            v-on:click = "changeColor()">
         </div>
     </div>    
 </template>
@@ -17,6 +18,11 @@ export default {
     },
     beforeMount(){
         console.log(this.child);
+    },
+    methods:{
+        changeColor:function(){
+            
+        }
     }
 }
 </script>
@@ -25,7 +31,10 @@ export default {
     border-radius: 100%;
     height: 30%;
     width: 90%;
-    margin:.5em;
+    margin-top:1.66%;
+    margin-bottom:1.66%;
+    margin-left: auto;
+    margin-right:auto;
 }
 .stopBox {
     width:5em;

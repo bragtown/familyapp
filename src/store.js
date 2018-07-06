@@ -37,12 +37,19 @@ export default new Vuex.Store({
     },
     removeDailySticker(state, payload) {
       state.children.find(child => {
-        if(child.name === payload.child){
+        if (child.name === payload.child){
           child.dailyStickers.splice(payload.index, 1);
           return true;
         }
+      }) 
+    },
+    setLight(state, payload){
+      state.children.find(child => {
+        if (child.name === payload.child){
+          child.light = payload.light;
+          return true;
+        }
       })
-      
     }
   },
   actions: {
