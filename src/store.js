@@ -7,8 +7,8 @@ export default new Vuex.Store({
   state: {
     isLoggedIn:false,
     children:[
-      {name:'Hazel'},
-      {name:'James'}
+      {name:'Hazel', dailyStickers: [{color:'blue'}], light:'green'},
+      {name:'James', dailyStickers: [{color:'red'}], light:'green'}
     ]
   },
   getters: {
@@ -25,6 +25,24 @@ export default new Vuex.Store({
   mutations: {
     setIsLoggedIn(state, payload) {
       state.isLoggedIn = payload;
+    },
+    addDailySticker(state, payload) {
+      state.children.find(child => {
+        if(child.name === payload.child){
+          child.dailyStickers.push({color:payload.color})
+          return true;
+        }
+      })
+      // child.dailyStickers.push(payload.color)
+    },
+    removeDailySticker(state, payload) {
+      state.children.find(child => {
+        if(child.name === payload.child){
+          child.dailyStickers.splice(payload.index, 1);
+          return true;
+        }
+      })
+      
     }
   },
   actions: {
