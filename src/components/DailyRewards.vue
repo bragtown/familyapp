@@ -1,5 +1,5 @@
 <template>
-    <div class = "flex-row">
+    <div class = "flex-row dailyRewards">
         <div 
             class = "column-reverse stickerBox"
             droppable = "true"
@@ -11,7 +11,11 @@
                 v-bind:key="index"
                 :style="'background-color:' + sticker.color"
                 draggable = "true"
-                v-on:dragstart = "dragstartRemove(index)">
+                v-on:dragstart = "dragstartRemove(index)"
+                v-on:touchstart = "dragstartRemove(index)"
+                v-on:touchmove = "touchmove"
+                v-on:touchcancel = "touchendRemove"
+                v-on:touchend = "touchendRemove">
             </div>
         </div>
         <div class = "column-reverse pickerBox"
@@ -22,7 +26,11 @@
                 class = "colorBox"
                 :style="'background-color:'+color"
                 draggable = "true"
-                v-on:dragstart = "dragstart(color)">
+                v-on:dragstart = "dragstart(color)"
+                v-on:touchstart="dragstart(color)"
+                v-on:touchmove="touchmove"
+                v-on:touchcancel="touchend"
+                v-on:touchend="touchend">
             </div>
         </div>    
     </div>
@@ -34,8 +42,15 @@ export default {
     data:function(){
         return {
             colors:['red', 'blue', 'yellow', 'purple', 'green', 'orange'],
-            dropColor:''
+            dropColor:'',
+            rect:{},
+            removeRect:{},
+            canDrop:false
         }
+    },
+    mounted:function(){
+        this.rect = document.getElementsByClassName('stickerBox')[0].getBoundingClientRect();
+        console.log(this.rect)
     },
     methods:{
         ...mapMutations([
@@ -62,24 +77,47 @@ export default {
             let vm = this;
             console.log('removing')
             this.removeDailySticker({child:vm.child.name, index:vm.stickerRemoveIndex})
+        },
+        touchendRemove: function() {
+            let vm = this;
+            if(!this.canDrop){
+                console.log('removing')
+                this.removeDailySticker({child:vm.child.name, index:vm.stickerRemoveIndex})
+            }
+        },
+        touchend:function(color){
+            let vm = this;
+            if(vm.canDrop){    
+                this.addDailySticker({child:vm.child.name, color:vm.dropColor});
+                this.dropColor = '';
+            }
+
+
+        },
+        touchmove:function(touchevent){
+            let change = touchevent.changedTouches[0]
+            this.canDrop = (
+                change.clientX <= this.rect.right &&
+                change.clientX >= this.rect.left &&
+                change.clientY <= this.rect.bottom &&
+                change.clientY >= this.rect.top);
         }
     }
 }
 </script>
 <style>
-    .column-reverse {
-        display: flex;
-        flex-direction: column-reverse;
-        display: webkit-flex;
-        -webkit-flex-direction: column-reverse
+    .dailyRewards {
+        margin-left: auto;
+        margin-right: auto;
+        width:22em;
     }
     .sticker {
         height:15%;
         margin:.5em;
     }
     .stickerBox {
-        width:10em;
-        height:15em;
+        width:15em;
+        height:22em;
         border:5px solid grey;
         border-top:0px;
     }
@@ -89,6 +127,6 @@ export default {
         margin:.5em;
     }
     .pickerBox {
-        height:15em;
+        height:22em;
     }
 </style>

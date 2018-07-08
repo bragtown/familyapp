@@ -4,11 +4,12 @@
             v-for = "(light, index) in lights"
             v-bind:key="index"
             :style = "'background-color:'+(child.light === light ? light : 'black')"
-            v-on:click = "changeColor()">
+            v-on:click = "setLight({child:child.name, light})">
         </div>
     </div>    
 </template>
 <script>
+import {mapMutations} from 'vuex';
 export default {
     props:['child'],
     data:function(){
@@ -20,9 +21,9 @@ export default {
         console.log(this.child);
     },
     methods:{
-        changeColor:function(){
-            
-        }
+        ...mapMutations([
+            'setLight'
+        ])
     }
 }
 </script>
@@ -40,5 +41,7 @@ export default {
     width:5em;
     height:15em;
     border:5px solid grey;
+    margin-left: auto;
+    margin-right: auto;
 }
 </style>

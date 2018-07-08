@@ -8,7 +8,7 @@ export default new Vuex.Store({
     isLoggedIn:false,
     children:[
       {name:'Hazel', dailyStickers: [{color:'blue'}], light:'green'},
-      {name:'James', dailyStickers: [{color:'red'}], light:'green'}
+      {name:'James', dailyStickers: [{color:'red'}], light:'green', rewards:[{reward:'Walk', selected: true},{reward:'Dance', selected: false}]}
     ]
   },
   getters: {
@@ -50,6 +50,17 @@ export default new Vuex.Store({
           return true;
         }
       })
+    },
+    setReward(state, payload){
+      state.children.find(child => {
+        if (child.name === payload.child){
+          child.rewards.forEach((reward,index) => {
+            reward.selected = payload.index === index
+          })
+          return true;
+        }
+      })
+
     }
   },
   actions: {
