@@ -32,7 +32,7 @@ import DailyRewards from '@/components/DailyRewards'
 import StopLight from '@/components/Stoplight'
 import Rewards from '@/components/Rewards'
 import {Modal} from 'uiv'
-import EditChild from '@components/EditChild';
+import EditChild from '@/components/EditChild'
 export default {
     components: {
         DailyRewards,

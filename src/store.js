@@ -9,7 +9,8 @@ export default new Vuex.Store({
     children:[
       {name:'Hazel', dailyStickers: [{color:'blue'}], light:'green'},
       {name:'James', dailyStickers: [{color:'red'}], light:'green', rewards:[{reward:'Walk', selected: true},{reward:'Dance', selected: false}]}
-    ]
+    ],
+    updatedChild:{}
   },
   getters: {
     isLoggedIn:function(state) {
@@ -20,6 +21,9 @@ export default new Vuex.Store({
     },
     getChild: (state) => (name) => {
       return state.children.find(child => child.name === name)
+    },
+    updatedChild: function(state){
+      return state.updatedChild
     }
   },
   mutations: {
@@ -55,12 +59,15 @@ export default new Vuex.Store({
       state.children.find(child => {
         if (child.name === payload.child){
           child.rewards.forEach((reward,index) => {
-            reward.selected = payload.index === index
+            reward.selected = payload.index === index;
           })
           return true;
         }
       })
 
+    },
+    setUpdatedChild(state, payload){
+      state.updatedChild = payload
     }
   },
   actions: {
