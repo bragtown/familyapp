@@ -12,7 +12,7 @@
                 :style="'background-color:' + sticker.color"
                 draggable = "true"
                 v-on:dragstart = "dragstartRemove(index)"
-                v-on:touchstart = "dragstartRemove(index)"
+                v-on:touchstart = "dragstartRemove(index, $event)"
                 v-on:touchmove = "touchmove"
                 v-on:touchcancel = "touchendRemove"
                 v-on:touchend = "touchendRemove">
@@ -57,13 +57,13 @@ export default {
             'addDailySticker',
             'removeDailySticker'
         ]),
-        dragstart: function(color) {
-            console.log('dragstart')
+        dragstart: function(color, event) {
+            console.log('target', event)
             this.dropColor = color;
         },
         drop: function() {
             let vm = this;
-            this.addDailySticker({child:vm.child.name, color:vm.dropColor});
+            this.addDailySticker({color:vm.dropColor});
             this.dropColor = '';
         },
         dragover: function (ev) {
@@ -76,31 +76,30 @@ export default {
         dropRemove: function() {
             let vm = this;
             console.log('removing')
-            this.removeDailySticker({child:vm.child.name, index:vm.stickerRemoveIndex})
+            this.removeDailySticker({index:vm.stickerRemoveIndex})
         },
-        touchendRemove: function() {
+        touchendRemove: function(touchevent) {
             let vm = this;
-            if(!this.canDrop){
-                console.log('removing')
-                this.removeDailySticker({child:vm.child.name, index:vm.stickerRemoveIndex})
+            if(!this.touchInRect(touchevent.changedTouches[0])){
+                this.removeDailySticker({index:vm.stickerRemoveIndex})
             }
         },
-        touchend:function(color){
+        touchend:function(touchevent){
             let vm = this;
-            if(vm.canDrop){    
-                this.addDailySticker({child:vm.child.name, color:vm.dropColor});
+            if (this.touchInRect(touchevent.changedTouches[0])) {    
+                this.addDailySticker({color:vm.dropColor});
                 this.dropColor = '';
             }
 
 
         },
         touchmove:function(touchevent){
-            let change = touchevent.changedTouches[0]
-            this.canDrop = (
-                change.clientX <= this.rect.right &&
-                change.clientX >= this.rect.left &&
-                change.clientY <= this.rect.bottom &&
-                change.clientY >= this.rect.top);
+        },
+        touchInRect:function(change){
+            return (change.clientX <= this.rect.right &&
+               change.clientX >= this.rect.left &&
+               change.clientY <= this.rect.bottom &&
+               change.clientY >= this.rect.top)
         }
     }
 }

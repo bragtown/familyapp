@@ -5,7 +5,7 @@
                 v-for = "(reward, index) in child.rewards"
                 v-bind:key="index"
                 :class = "reward.selected ? 'success' : ''"
-                v-on:click = "setReward({child:child.name, index})">
+                v-on:click = "setReward({index})">
                 <td>{{reward.reward}}</td>
             </tr>
             <tr>

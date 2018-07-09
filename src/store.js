@@ -7,10 +7,11 @@ export default new Vuex.Store({
   state: {
     isLoggedIn:false,
     children:[
-      {name:'Hazel', dailyStickers: [{color:'blue'}], light:'green'},
-      {name:'James', dailyStickers: [{color:'red'}], light:'green', rewards:[{reward:'Walk', selected: true},{reward:'Dance', selected: false}]}
+      {id:0, name:'Hazel', dailyStickers: [{color:'blue'}], light:'green'},
+      {id:1, name:'James', dailyStickers: [{color:'red'}], light:'green', rewards:[{reward:'Walk', selected: true},{reward:'Dance', selected: false}]}
     ],
-    updatedChild:{}
+    updatedChild:{},
+    currentChild:{}
   },
   getters: {
     isLoggedIn:function(state) {
@@ -30,44 +31,32 @@ export default new Vuex.Store({
     setIsLoggedIn(state, payload) {
       state.isLoggedIn = payload;
     },
+    setCurrentChild(state, payload){
+      state.currentChild = state.children.find(child => child.name == payload);
+    },
     addDailySticker(state, payload) {
-      state.children.find(child => {
-        if(child.name === payload.child){
-          child.dailyStickers.push({color:payload.color})
-          return true;
-        }
-      })
-      // child.dailyStickers.push(payload.color)
+      state.currentChild.dailyStickers.push({color:payload.color})
     },
     removeDailySticker(state, payload) {
-      state.children.find(child => {
-        if (child.name === payload.child){
-          child.dailyStickers.splice(payload.index, 1);
-          return true;
-        }
-      }) 
+      state.currentChild.dailyStickers.splice(payload.index, 1); 
     },
     setLight(state, payload){
-      state.children.find(child => {
-        if (child.name === payload.child){
-          child.light = payload.light;
-          return true;
-        }
-      })
+      state.currentChild.light = payload.light;
     },
     setReward(state, payload){
-      state.children.find(child => {
-        if (child.name === payload.child){
-          child.rewards.forEach((reward,index) => {
-            reward.selected = payload.index === index;
-          })
-          return true;
-        }
-      })
+      state.currentChild.rewards.forEach((reward,index) => {
+        reward.selected = payload.index === index;
+      });
 
     },
     setUpdatedChild(state, payload){
-      state.updatedChild = payload
+      state.updatedChild = Object.assign({}, payload);
+    },
+    updateChildName(state, payload){
+      state.updatedChild.name = payload
+    },
+    updateChild:function(state, payload){
+      state.currentChild.name = state.updatedChild.name
     }
   },
   actions: {

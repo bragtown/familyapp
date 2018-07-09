@@ -4,7 +4,7 @@
             v-for = "(light, index) in lights"
             v-bind:key="index"
             :style = "'background-color:'+(child.light === light ? light : 'black')"
-            v-on:click = "setLight({child:child.name, light})">
+            v-on:click = "setLight({light})">
         </div>
     </div>    
 </template>

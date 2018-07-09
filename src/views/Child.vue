@@ -21,7 +21,7 @@
                 <Rewards :child="child"></Rewards>
             </div>
         </div>
-        <modal v-model="edit" title="Edit">
+        <modal v-model="edit" title="Edit" @hide="updateChild" ok-text = "Save">
             <EditChild :child="child"></EditChild>
         </modal>
     </div>
@@ -48,8 +48,17 @@ export default {
     },
     computed:{
         child:function(){
-            return this.$store.getters.getChild(this.$route.params.child)
+            return this.$store.state.currentChild;
         }
+    },
+    methods:{
+        updateChild:function(msg){
+            console.log('updating child', msg);
+            if(msg === 'ok') this.$store.commit('updateChild', this.child);
+        }
+    },
+    beforeMount(){
+        this.$store.commit('setCurrentChild', this.$route.params.child)
     }
 }
 </script>

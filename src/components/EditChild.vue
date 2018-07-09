@@ -4,20 +4,24 @@
         <input 
             type="text" 
             class = "form-control"
-            v-model="updatedChild.name">
+            v-model="childName">
     </div>
 </template>
 <script>
 export default {
+    props:['child'],
     computed:{
-        child:{
+        childName:{
             get:function(){
-                return this.$store.getters.getChild(this.$route.params.child);
+                return this.$store.state.updatedChild.name
             },
-            set:function(){
-                this.$store.commit()
+            set:function(value){
+                this.$store.commit('updateChildName', value)
             }
         }
+    },
+    beforeMount(){
+        this.$store.commit('setUpdatedChild', this.child);
     }
 }
 </script>
