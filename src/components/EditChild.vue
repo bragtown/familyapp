@@ -9,10 +9,14 @@
 </template>
 <script>
 export default {
-    props:['child', 'isOpen'],
-    data:function(){
-        return {
-            updatedChild:Object.assign({}, this.child)
+    computed:{
+        child:{
+            get:function(){
+                return this.$store.getters.getChild(this.$route.params.child);
+            },
+            set:function(){
+                this.$store.commit()
+            }
         }
     }
 }

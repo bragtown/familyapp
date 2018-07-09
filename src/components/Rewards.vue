@@ -8,6 +8,9 @@
                 v-on:click = "setReward({child:child.name, index})">
                 <td>{{reward.reward}}</td>
             </tr>
+            <tr>
+                
+            </tr>
         </tbody>
     </table>
 </template>
