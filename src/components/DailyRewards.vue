@@ -27,7 +27,7 @@
                 :style="'background-color:'+color"
                 draggable = "true"
                 v-on:dragstart = "dragstart(color)"
-                v-on:touchstart="dragstart(color)"
+                v-on:touchstart="dragstart(color, $event)"
                 v-on:touchmove="touchmove"
                 v-on:touchcancel="touchend"
                 v-on:touchend="touchend">
@@ -45,7 +45,7 @@ export default {
             dropColor:'',
             rect:{},
             removeRect:{},
-            canDrop:false
+            draggedNode:{}
         }
     },
     mounted:function(){
@@ -59,6 +59,15 @@ export default {
         ]),
         dragstart: function(color, event) {
             console.log('target', event)
+            if(event){
+                this.draggedNode = event.target.cloneNode()
+                this.draggedNode.style.position = "absolute"
+                this.draggedNode.style.top = event.changedTouches[0].clientX +'px';
+                this.draggedNode.style.left = event.changedTouches[0].clientY + 'px';
+                this.draggedNode.style.height = '2em';
+                this.draggedNode.style.width = '4em';
+                document.body.appendChild(this.draggedNode);
+            }
             this.dropColor = color;
         },
         drop: function() {
@@ -70,7 +79,16 @@ export default {
             ev.preventDefault()
             return true;
         },
-        dragstartRemove: function(index){
+        dragstartRemove: function(index, event){
+            if(event){
+                this.draggedNode = event.target.cloneNode()
+                this.draggedNode.style.position = "absolute"
+                this.draggedNode.style.top = event.changedTouches[0].clientX +'px';
+                this.draggedNode.style.left = event.changedTouches[0].clientY + 'px';
+                this.draggedNode.style.height = '2em';
+                this.draggedNode.style.width = '4em';
+                document.body.appendChild(this.draggedNode);
+            }
             this.stickerRemoveIndex = index;
         },
         dropRemove: function() {
@@ -83,6 +101,7 @@ export default {
             if(!this.touchInRect(touchevent.changedTouches[0])){
                 this.removeDailySticker({index:vm.stickerRemoveIndex})
             }
+            document.body.removeChild(this.draggedNode)
         },
         touchend:function(touchevent){
             let vm = this;
@@ -90,10 +109,14 @@ export default {
                 this.addDailySticker({color:vm.dropColor});
                 this.dropColor = '';
             }
+            document.body.removeChild(this.draggedNode)
 
 
         },
         touchmove:function(touchevent){
+            console.log(this.draggedNode)
+            this.draggedNode.style.top = event.changedTouches[0].clientY +'px';
+            this.draggedNode.style.left = event.changedTouches[0].clientX + 'px';
         },
         touchInRect:function(change){
             return (change.clientX <= this.rect.right &&
