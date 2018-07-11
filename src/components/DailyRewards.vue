@@ -36,7 +36,7 @@
     </div>
 </template>
 <script>
-import {mapMutations} from 'vuex'
+import {mapMutations, mapActions} from 'vuex'
 export default {
     props:['dailyStickers', 'child'],
     data:function(){
@@ -50,15 +50,15 @@ export default {
     },
     mounted:function(){
         this.rect = document.getElementsByClassName('stickerBox')[0].getBoundingClientRect();
-        console.log(this.rect)
     },
     methods:{
         ...mapMutations([
-            'addDailySticker',
             'removeDailySticker'
         ]),
+        ...mapActions([
+            'addDailySticker'
+        ]),
         dragstart: function(color, event) {
-            console.log('target', event)
             if(event){
                 this.draggedNode = event.target.cloneNode()
                 this.draggedNode.style.position = "absolute"
@@ -93,7 +93,6 @@ export default {
         },
         dropRemove: function() {
             let vm = this;
-            console.log('removing')
             this.removeDailySticker({index:vm.stickerRemoveIndex})
         },
         touchendRemove: function(touchevent) {
@@ -114,7 +113,6 @@ export default {
 
         },
         touchmove:function(touchevent){
-            console.log(this.draggedNode)
             this.draggedNode.style.top = event.changedTouches[0].clientY +'px';
             this.draggedNode.style.left = event.changedTouches[0].clientX + 'px';
         },

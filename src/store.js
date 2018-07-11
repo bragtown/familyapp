@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import Axios from 'axios';
 
 Vue.use(Vuex)
 
@@ -7,7 +8,7 @@ export default new Vuex.Store({
   state: {
     isLoggedIn:false,
     children:[
-      {id:0, name:'Hazel', dailyStickers: [{color:'blue'}], light:'green'},
+      {id:0, name:'Hazel', dailyStickers: [{color:'blue'}], light:'green', rewards:[]},
       {id:1, name:'James', dailyStickers: [{color:'red'}], light:'green', rewards:[{reward:'Walk', selected: true},{reward:'Dance', selected: false}]}
     ],
     updatedChild:{},
@@ -56,10 +57,42 @@ export default new Vuex.Store({
       state.updatedChild.name = payload
     },
     updateChild:function(state, payload){
-      state.currentChild.name = state.updatedChild.name
+      state.currentChild = state.updatedChild
+    },
+    removeReward:function(state, payload){
+      state.updatedChild.rewards.splice(payload, 1);
+    },
+    addReward:function(state, paylaod){
+      if(!state.updatedChild.rewards) state.updatedChild.rewards = [];
+      state.updatedChild.rewards.push(paylaod);
     }
   },
   actions: {
-
+    addDailySticker ({commit}, payload) {
+      setTimeout(() => {
+        commit('addDailySticker', payload)
+        console.log('committing')
+      }, 100);
+    },
+    removeDailySticker ({commit}, paylaod){
+      axios.post('/api/removeDailySticker', {payload}).then((response)=>{
+        commit('removeDailySticker', payload);
+      })
+    },
+    setReward ({commit}, payload) {
+      axios.post('/api/setReward', {paylaod}).then((response)=>{
+        commit('', payload)
+      })
+    },
+    updateChild ({commit}, payload) {
+      axios.post('', {paylaod}).then((response)=>{
+        commit('', payload)
+      })
+    },
+    getChildren ({commit}, payload) {
+      axios.get('/api/getChildren').then((response)=>{
+        commit('getChildren', payload)
+      })
+    }
   }
 })
