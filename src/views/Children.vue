@@ -1,26 +1,44 @@
 <template>
     <div class = "container">
         <div class = "panel panel-default">
-                <div class = "panel-body">
-        <table class = "table table-striped">
-            <tbody>
-                <tr v-for = "(child, index) in children" v-bind:key="index">
-                    <td><a :href = "'#/children/child/'+child.name">{{child.name}}</a></td>
-                </tr>
-            </tbody>
-        </table>
-
+            <div class = "panel-body">
+                <table class = "table table-striped">
+                    <tbody>
+                        <tr v-for = "(child, index) in children" v-bind:key="index">
+                            <td><a :href = "'#/children/child/'+child.name">{{child.name}}</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <label>New Child</label>
+                
+                <div class = "input-group">
+                    <input v-model = "child" class = "form-control">
+                    <span class = "input-group-btn"><button class = "btn btn-success" v-on:click="addChild()"><span class = "glyphicon glyphicon-plus"></span></button></span>
+                </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 export default {
+    data:function(){
+        return {
+            child:''
+        }
+    },
     computed:{
         ...mapGetters([
             'children'
         ])
+    },
+    methods:{
+        ...mapActions(['newChild']),
+
+        addChild:function(){
+            console.log(console.log(this.newChild));
+            this.newChild({name: newChild});
+        }
     }
 }
 </script>

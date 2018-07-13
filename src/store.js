@@ -96,9 +96,9 @@ export default new Vuex.Store({
         commit('getChildren', payload)
       })
     },
-    newChild({commit}, payload){
+    newChild ({commit}, payload){
       axios.post('/api/newChild', payload).then((response)=>{
-        commit('newChld', response.child);
+        commit('newChild', response.child);
       })
     }
   }
