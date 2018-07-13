@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import Axios from 'axios';
+import axois from 'axios';
 
 Vue.use(Vuex)
 
@@ -65,14 +65,16 @@ export default new Vuex.Store({
     addReward:function(state, paylaod){
       if(!state.updatedChild.rewards) state.updatedChild.rewards = [];
       state.updatedChild.rewards.push(paylaod);
+    },
+    newChild:function(state, paylaod){
+      state.children.push(paylaod);
     }
   },
   actions: {
     addDailySticker ({commit}, payload) {
-      setTimeout(() => {
+      axios.post('/api/addDailySticker', payload).then(function(response){
         commit('addDailySticker', payload)
-        console.log('committing')
-      }, 100);
+      })
     },
     removeDailySticker ({commit}, paylaod){
       axios.post('/api/removeDailySticker', {payload}).then((response)=>{
@@ -85,13 +87,18 @@ export default new Vuex.Store({
       })
     },
     updateChild ({commit}, payload) {
-      axios.post('', {paylaod}).then((response)=>{
-        commit('', payload)
+      axios.post('/api/updateChild', {paylaod}).then((response)=>{
+        commit('updateChild', payload)
       })
     },
     getChildren ({commit}, payload) {
       axios.get('/api/getChildren').then((response)=>{
         commit('getChildren', payload)
+      })
+    },
+    newChild({commit}, payload){
+      axios.post('/api/newChild', payload).then((response)=>{
+        commit('newChld', response.child);
       })
     }
   }
