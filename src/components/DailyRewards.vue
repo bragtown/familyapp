@@ -6,13 +6,13 @@
             v-on:drop = "drop()"
             v-on:dragover="dragover">
         <div 
-                class = "sticker" 
-                v-for="(sticker, index) in dailyStickers" 
+                class = "sticker pointer" 
+                v-for="(sticker, index) in child.daily_stickers" 
                 v-bind:key="index"
                 :style="'background-color:' + sticker.color"
                 draggable = "true"
-                v-on:dragstart = "dragstartRemove(index)"
-                v-on:touchstart = "dragstartRemove(index, $event)"
+                v-on:dragstart = "dragstartRemove(sticker._id)"
+                v-on:touchstart = "dragstartRemove(sticker._id, $event)"
                 v-on:touchmove = "touchmove"
                 v-on:touchcancel = "touchendRemove"
                 v-on:touchend = "touchendRemove">
@@ -23,7 +23,7 @@
         v-on:drop = "dropRemove">
             <div v-for="(color, index) in colors"
                 v-bind:key="index"
-                class = "colorBox"
+                class = "colorBox pointer"
                 :style="'background-color:'+color"
                 draggable = "true"
                 v-on:dragstart = "dragstart(color)"
@@ -38,25 +38,25 @@
 <script>
 import {mapMutations, mapActions} from 'vuex'
 export default {
-    props:['dailyStickers', 'child'],
+    props:['child'],
     data:function(){
         return {
             colors:['red', 'blue', 'yellow', 'purple', 'green', 'orange'],
             dropColor:'',
             rect:{},
             removeRect:{},
-            draggedNode:{}
+            draggedNode:{},
+            stickerRemoveId:''
         }
     },
     mounted:function(){
         this.rect = document.getElementsByClassName('stickerBox')[0].getBoundingClientRect();
     },
     methods:{
-        ...mapMutations([
-            'removeDailySticker'
-        ]),
         ...mapActions([
-            'addDailySticker'
+            'addDailySticker',
+            'getDailyStickers',
+            'removeDailySticker'
         ]),
         dragstart: function(color, event) {
             if(event){
@@ -72,14 +72,14 @@ export default {
         },
         drop: function() {
             let vm = this;
-            this.addDailySticker({color:vm.dropColor});
+            this.addDailySticker({color:vm.dropColor, _id:vm.child._id});
             this.dropColor = '';
         },
         dragover: function (ev) {
             ev.preventDefault()
             return true;
         },
-        dragstartRemove: function(index, event){
+        dragstartRemove: function(_id, event){
             if(event){
                 this.draggedNode = event.target.cloneNode()
                 this.draggedNode.style.position = "absolute"
@@ -89,23 +89,24 @@ export default {
                 this.draggedNode.style.width = '4em';
                 document.body.appendChild(this.draggedNode);
             }
-            this.stickerRemoveIndex = index;
+            this.stickerRemoveId = _id;
         },
         dropRemove: function() {
             let vm = this;
-            this.removeDailySticker({index:vm.stickerRemoveIndex})
+            this.removeDailySticker({_id:vm.stickerRemoveId})
         },
         touchendRemove: function(touchevent) {
             let vm = this;
             if(!this.touchInRect(touchevent.changedTouches[0])){
-                this.removeDailySticker({index:vm.stickerRemoveIndex})
+                this.removeDailySticker({_id:vm.stickerRemoveId})
             }
             document.body.removeChild(this.draggedNode)
         },
         touchend:function(touchevent){
             let vm = this;
-            if (this.touchInRect(touchevent.changedTouches[0])) {    
-                this.addDailySticker({color:vm.dropColor});
+            if (this.touchInRect(touchevent.changedTouches[0])) {
+                
+                this.addDailySticker({color:vm.dropColor, _id:vm.child._id});
                 this.dropColor = '';
             }
             document.body.removeChild(this.draggedNode)

@@ -5,7 +5,10 @@
                 <table class = "table table-striped">
                     <tbody>
                         <tr v-for = "(child, index) in children" v-bind:key="index">
-                            <td><a :href = "'#/children/child/'+child.name">{{child.name}}</a></td>
+                            <td>
+                                <a :href = "'#/children/child/'+child._id">{{child.name}}</a>
+                                <span class = "remove glyphicon glyphicon-remove" v-on:click="removeChild({child, index})"></span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -31,14 +34,18 @@ export default {
         ...mapGetters([
             'children'
         ])
+        
     },
     methods:{
-        ...mapActions(['newChild']),
+        ...mapActions(['newChild', 'getChildren', 'removeChild']),
 
         addChild:function(){
-            console.log(console.log(this.newChild));
-            this.newChild({name: newChild});
+            this.newChild({name: this.child});
+            this.child = '';
         }
+    },
+    beforeMount(){
+        this.getChildren();
     }
 }
 </script>
@@ -46,6 +53,11 @@ export default {
     .large {
         font-size: 12em;
         display: block;
+    }
+    .remove {
+        float:right;
+        color:red;
+        cursor:pointer;
     }
 </style>
 

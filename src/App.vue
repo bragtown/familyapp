@@ -6,6 +6,7 @@
       :isLoggedIn="isLoggedIn"  
       :setIsLoggedIn="setIsLoggedIn"
       :leftNavItems = "$router.options.routes"
+      :showLogInOption = "true"
       :currentRoute = "$route">
     </BragNav>
     <router-view/>

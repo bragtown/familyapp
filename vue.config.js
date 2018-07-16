@@ -1,7 +1,8 @@
 module.exports = {
     devServer: {
+        disableHostCheck: true,
         proxy: {
-            '/api/*': {target:'http://family.lvh.me:9000'}
+            '/api/*': {target:'http://family-local.bragtown.com:9000'}
         }
     }   
 }

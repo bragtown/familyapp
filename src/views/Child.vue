@@ -3,7 +3,7 @@
         <h1>
             {{child.name}}
             <span 
-                class = "floatRight shrink glyphicon glyphicon-option-vertical"
+                class = "pointer floatRight shrink glyphicon glyphicon-option-vertical"
                 v-on:click="edit = true">
             </span>
         </h1>
@@ -21,13 +21,13 @@
                 <Rewards :child="child"></Rewards>
             </div>
         </div>
-        <modal v-model="edit" title="Edit" @hide="updateChild" ok-text = "Save">
-            <EditChild :child="child"></EditChild>
+        <modal v-model="edit" title="Edit" @hide="updateChild" @show = "setUpdatedChild" ok-text = "Save">
+            <EditChild></EditChild>
         </modal>
     </div>
 </template>
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters, mapActions, mapMutations} from 'vuex'
 import DailyRewards from '@/components/DailyRewards'
 import StopLight from '@/components/Stoplight'
 import Rewards from '@/components/Rewards'
@@ -52,13 +52,15 @@ export default {
         }
     },
     methods:{
+        ...mapActions(['getCurrentChild']),
+        ...mapMutations(['setUpdatedChild']),
         updateChild:function(msg){
             console.log('updating child', msg);
-            if(msg === 'ok') this.$store.commit('updateChild', this.child);
+            if(msg === 'ok') this.$store.dispatch('updateChild', this.$store.state.updatedChild);
         }
     },
     beforeMount(){
-        this.$store.commit('setCurrentChild', this.$route.params.child)
+        this.getCurrentChild(this.$route.params.child);
     }
 }
 </script>
@@ -86,6 +88,9 @@ export default {
     }
     .shrink {
         font-size: .5em;
+    }
+    .pointer{
+        cursor: pointer;
     }
 </style>
 

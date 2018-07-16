@@ -22,7 +22,6 @@
 </template>
 <script>
 export default {
-    props:['child'],
     data:function(){
         return {
             newReward:''
@@ -51,9 +50,6 @@ export default {
             this.$store.commit('addReward', {reward:this.newReward, selected:false})
             this.newReward = '';
         }
-    },
-    beforeMount(){
-        this.$store.commit('setUpdatedChild', this.child);
     }
 }
 </script>
