@@ -74,7 +74,7 @@ export default new Vuex.Store({
       state.children.push(paylaod);
     },
     getChildren:function(state, payload) {
-      console.log(payload)
+      console.log('children',payload)
       state.children.splice(0, state.children.length)
       payload.forEach(function(child){
         state.children.push(child);
